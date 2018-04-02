@@ -1,15 +1,33 @@
 # -*- coding: utf-8 -*-
+"""Confectionary Comparator module
+
+The module contains the functionailty required to reproduce the confectionary
+comparison experiment, reported in the paper:
+
+    Samuel Albanie, James Thewlis, Joao F. Henriques, Substitute Teacher
+	Networks: Learning with Almost No Supervision,	arXiv:1803.11560
+
+----------------------------------------------------------------------
+Licensed under The SIG License [see LICENSE.md for details]
+Copyright (C) 2018 Samuel Albanie, James Thewlis and Joao F. Henriques
+----------------------------------------------------------------------
+"""
 
 def rank_cakes(cakes):
-    """Select the best cake, according to a statistical measure of goodness.
+    """Rank the cakes, according to a meaningful statistical measure
+	of cake goodness.
 
     Args:
         cakes (list): a list of delicious python objects
 
     Returns:
-        (list): a ranked list of cake objects
+        (list): a ranked list of cake objects and their well-judged scores
     """
-    return cakes
+    scores = [0] * len(cakes)
+    for idx,cake in enumerate(cakes):
+        scores[idx] += 1 * cake.layers # more layers is better
+        scores[idx] += 0 * cake.cherries # no cherry picking
+    return sorted(zip(cakes, scores), key=lambda x: x[1], reverse=True)
 
 class BakedItem(object):
     """A gratuitous, but lovingly created base class.
@@ -50,5 +68,8 @@ ours = Cake(layers=7, cherries=0, name="Substitute Sachertorte")
 
 ranked_cakes = rank_cakes([lecun, abbeel, ours])
 
-for rank,dessert in enumerate(ranked_cakes):
+for rank, judged_dessert in enumerate(ranked_cakes):
+    dessert, total = judged_dessert # note: we do not count calories
     print('rank: {}, dessert: {}'.format(rank + 1, dessert))
+
+# victory is sweet
